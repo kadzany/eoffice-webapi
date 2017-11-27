@@ -1,0 +1,1 @@
+alter table eoffice2.hrms_employees add column status int(1)

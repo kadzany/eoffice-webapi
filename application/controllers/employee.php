@@ -1,12 +1,12 @@
 <?php
 require(APPPATH . 'libraries/REST_Controller.php');
 
-class Auth extends REST_Controller
+class Employee extends REST_Controller
 {
     public function __construct()
     {
         parent::__construct();
-        $this->load->model('legacy/login_model');
+        $this->load->model('legacy/employee');
     }
 
     public function index_get()
@@ -17,7 +17,7 @@ class Auth extends REST_Controller
 
     public function index_post()
     {
-        $result = $this->login_model->validate2($this->post('username'), $this->post('password'));
-        $this->response($result, parent::HTTP_OK);
+      $data = array('returned: '. $this->get('id'));
+      $this->response($data);
     }
 }

@@ -2,7 +2,7 @@
 //by sugiantooeoen
 //www.sugiantooeoen.com
 //database model, model ini akan menurunkan ke model yang berhubungan dengan database akan 
-class database extends ci_model{
+class database extends CI_Model{
 	public $table;
 	protected $where = array();
 	protected $like = array();
