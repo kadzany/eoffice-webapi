@@ -49,7 +49,7 @@ class Login_model extends CI_Model
         if ($query->num_rows() == 1) {
             $row = $query->row();
             
-            if ($row->status==1 && $this->cek_pemeriksa_tetap2($row->emp_id) == false) {
+            if ($row->status==1 && $this->cek_pemeriksa_tetap2($row->emp_id) == true) {
                 return "Ok_tetap";
             } else {
                 if ($row->status==1) {
@@ -107,9 +107,9 @@ class Login_model extends CI_Model
         $q2 = $this->db->get();
         
         if ($q->num_rows()>=1 || $q2->num_rows()>=1) {
-            return false;
-        } else {
             return true;
+        } else {
+            return false;
         }
     }
 }
