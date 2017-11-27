@@ -6,7 +6,7 @@ class Employees extends REST_Controller
     public function __construct()
     {
         parent::__construct();
-        $this->load->model('hrms/employee_repository', 'employee_repository');
+        $this->load->model('repos/employee_repository', 'employee_repository');
     }
 
     public function index_get()
