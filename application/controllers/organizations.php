@@ -41,7 +41,7 @@ class Organizations extends REST_Controller
             );
             
             $result = $this->organization_repository->add_organization($entity);
-            // $this->response($result, parent::HTTP_OK);
+            $this->response($result, parent::HTTP_OK);
         }
         catch(Exception $e){
             $this->response($e->getMessage(), parent::HTTP_INTERNAL_SERVER_ERROR);
@@ -54,5 +54,26 @@ class Organizations extends REST_Controller
      */
     public function index_put()
     {
+        try{
+            $entity = new Organization_entity(
+                array(
+                    'org_num'=> $this->put('org_num'),
+                    'org_name'=> $this->put('org_name'),
+                    'org_code'=> $this->put('org_code'),
+                    'org_address'=> $this->put('org_address'),
+                    'org_email'=> $this->put('org_email'),
+                    'org_work_telp'=> $this->put('org_work_telp'),
+                    'org_fax'=> $this->put('org_fax'),
+                    'org_postal_code'=> $this->put('org_postal_code'),
+                    'org_parent' => $this->put('org_parent')
+                )
+            );
+            
+            $result = $this->organization_repository->update_organization($entity);
+            $this->response($result, parent::HTTP_OK);
+        }
+        catch(Exception $e){
+            $this->response($e->getMessage(), parent::HTTP_INTERNAL_SERVER_ERROR);
+        }
     }
 }
