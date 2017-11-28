@@ -12,9 +12,15 @@ class Organization_repository extends CI_Model
     /*
     * Function untuk menampilkan seluruh organization
     */
-    public function get_all_org()
+    public function get_all_org($filter, $keyword)
     {
-        $query = $this->legacy_organization->get_all_org();
+        $this->db->select('*');
+        $this->db->from('hrms_organization');
+        $this->db->where('org_num !=', '8');
+        if ($filter!=null && $filter!='0') {
+            $this->db->like(strtolower($filter), strtolower($keyword));
+        }
+        $query = $this->db->get();
         return $query->result();
     }
 }

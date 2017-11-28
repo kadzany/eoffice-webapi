@@ -9,13 +9,22 @@ class Organizations extends REST_Controller
         $this->load->model('repos/organization_repository', 'organization_repository');
     }
 
+    /**
+     * Search organizations
+     */
     public function index_get()
     {
-        $result = $this->organization_repository->get_all_org();
+        $filter = $this->get('filter');
+        $keyword = $this->get('keyword');
+        $result = $this->organization_repository->get_all_org($filter, $keyword);
         $this->response($result);
     }
 
+    /**
+     * Add organization
+     */
     public function index_post()
     {
+
     }
 }
