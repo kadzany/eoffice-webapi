@@ -18,12 +18,12 @@ class Employees extends REST_Controller
         } else {
             $result = $this->employee_repository->get_all_emp();
         }        
-        $this->response($result);
+        $this->response($result, parent::HTTP_OK);
     }
 
     public function index_post()
     {
         $data = array('returned: '. $this->get('id'));
-        $this->response($data);
+        $this->response($data, parent::HTTP_OK);
     }
 }

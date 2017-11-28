@@ -1,4 +1,5 @@
 <?php
+require(APPPATH . 'models/repos/RepoConstants.php');
 /**
  * Repository pattern
  */

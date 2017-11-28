@@ -1,10 +1,10 @@
 <?php
+require(APPPATH . 'models/repos/RepoConstants.php');
 /**
  * Repository pattern
  */
 class Employee_repository extends CI_Model
 {
-    
     /**
      * function untuk memperoleh detail data dari employee
      * berdasarkan usernamenya
