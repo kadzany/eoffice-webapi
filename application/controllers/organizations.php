@@ -29,7 +29,6 @@ class Organizations extends REST_Controller
         try{
             $entity = new Organization_entity(
                 array(
-                    'org_id'=> $this->post('org_id'),
                     'org_name'=> $this->post('org_name'),
                     'org_code'=> $this->post('org_code'),
                     'org_address'=> $this->post('org_address'),
@@ -37,11 +36,12 @@ class Organizations extends REST_Controller
                     'org_work_telp'=> $this->post('org_work_telp'),
                     'org_fax'=> $this->post('org_fax'),
                     'org_postal_code'=> $this->post('org_postal_code'),
+                    'org_parent' => $this->post('org_parent')
                 )
             );
             
             $result = $this->organization_repository->add_organization($entity);
-            $this->response($result, parent::HTTP_OK);
+            // $this->response($result, parent::HTTP_OK);
         }
         catch(Exception $e){
             $this->response($e->getMessage(), parent::HTTP_INTERNAL_SERVER_ERROR);

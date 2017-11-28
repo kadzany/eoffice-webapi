@@ -27,79 +27,71 @@ class Organization_repository extends CI_Model
         return $query->result();
     }
 
+    /**
+     * Fungsi untuk meng-update counter
+     */
+    private function counter_assignment()
+    {
+        $this->db->select('org_start_num,org_counter_id,job_start_num,job_counter_id');
+        $this->db->from('hrms_counter');
+        $query_counter = $this->db->get();
+        $row_counter = $query_counter->row();
+        if (count($row_counter) == 0) {
+            throw new Exception('Error @OrgRepo: Counter not set by admin!');
+        }
+
+        $counter_job = $row_counter->job_counter_id;
+        $counter_org = $row_counter->org_counter_id;
+        $counter_job++;
+        $counter_org++;
+
+        $data_counter = array(
+            'org_counter_id'=>$counter_org,
+            'job_counter_id'=>$counter_job
+        );
+
+        $this->db->where('id', '1');
+        $this->db->update('hrms_counter', $data_counter);
+    }
+    
     /*
     * Proses menambah entry organisasi kedalam database
     */
     public function add_organization($entity)
     {
-        if (get_class($entity) != 'Organization_entity') {
-            throw new Exception("Error @OrgRepo: Invalid entity type!");
-        }
-        
-        $this->load->model("legacy/notadinas/database", "jobnya", true);
-        $this->jobnya->set_table("hrms_job");
-        $this->jobnya->set_order("job_num asc");
-        $where = array();
-        $where["job_id"] = $entity->job_id;
-        $this->jobnya->set_where($where);
-        
-        if (count($this->jobnya->tampil())<=1) {
-            throw new Exception("Error @OrgRepo: Job with id=". $entity->job_id ." does not existed!");
-        }
-
-        $this->load->model('legacy/organization');
-        $result = $this->organization->add_org($entity);
-    }
-
-    public function add_org($entity)
-    {
-        try 
-        {
+        try {
             if (get_class($entity) != 'Organization_entity') {
                 throw new Exception("Error @OrgRepo: Invalid entity type!");
             }
             
             $data = array(
-                'org_id'=> $entity->org_id,
                 'org_name'=>$entity->org_name,
                 'org_code'=>$entity->org_code,
                 'org_address'=>$entity->org_address,
                 'org_email'=>$entity->org_email,
                 'org_work_telp'=>$entity->org_work_telp,
                 'org_fax'=>$entity->org_fax,
-                'org_postal_code'=>$entity->org_postal_code
+                'org_postal_code'=>$entity->org_postal_code,
+                'org_parent' => $entity->org_parent
             );
             
-            if ($entity->org_parent!="") {
-                $data['org_parent'] = $entity->org_parent;
+            $this->db->trans_begin();
+
+            $this->counter_assignment();
+
+            $q = $this->db->insert('hrms_organization', $data);
+            if ($q == 0) {
+                throw new Exception('Error @OrgRepo: No rows affected!');
             }
             
-            $q = $this->db->insert('hrms_organization', $data);
-            $orgnum = mysql_insert_id();
-            
-            // update counters
-            $this->db->select('org_start_num,org_counter_id,job_start_num,job_counter_id');
-            $this->db->from('hrms_counter');
-            $query_counter = $this->db->get();
-            $row_counter = $query_counter->row();
-            
-            $counter_job = $row_counter->job_counter_id;
-            $counter_org = $row_counter->org_counter_id;
-            $counter_job++;
-            $counter_org++;
-            
-            $data_counter = array(
-                'org_counter_id'=>$counter_org,
-                'job_counter_id'=>$counter_job
-            );
-            
-            $this->db->where('id', '1');
-            $this->db->update('hrms_counter', $data_counter);
-            
+            if ($this->db->trans_status() === false) {
+                $this->db->trans_rollback();
+                return false;
+            }
+
+            $this->db->trans_commit();
             return true;
-        } 
-        catch (Exception $e) 
-        {
+        } catch (Exception $e) {
             throw $e;
         }
     }
