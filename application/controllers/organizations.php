@@ -7,7 +7,7 @@ class Organizations extends REST_Controller
     public function __construct()
     {
         parent::__construct();
-        $this->load->model('repos/organization_repository', 'organization_repository');
+        $this->load->model('repos/Organization_repository', 'organization_repository');
     }
 
     /**

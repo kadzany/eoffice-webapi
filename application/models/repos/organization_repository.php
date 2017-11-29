@@ -64,7 +64,7 @@ class Organization_repository extends CI_Model
     {
         $this->db->select('*');
         $this->db->from('hrms_organization');
-        $this->db->where('org_num !=', '8');
+        // $this->db->where('org_num !=', '8');
         if ($filter!=null && $filter!='0') {
             $this->db->like(strtolower($filter), strtolower($keyword));
         }
@@ -174,8 +174,12 @@ class Organization_repository extends CI_Model
             $this->db->where('org_num', $orgnum);
             $q = $this->db->delete('hrms_organization');
             
+            if ($q == false) {
+                $this->db->trans_rollback();
+                return null;
+            }
             $this->db->trans_commit();
-            return $q;
+            return true;
         } catch (Exception $e) {
             throw $e;
         }
