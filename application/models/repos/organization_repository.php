@@ -1,22 +1,26 @@
 <?php
 require(APPPATH . 'models/repos/RepoConstants.php');
+require(APPPATH . 'models/repos/Counter_repository.php');
 /**
  * @OrgRepo
  * Repository pattern
  */
 class Organization_repository extends CI_Model
 {
+    private $_counter_repository = null;
     public function __construct()
     {
         parent::__construct();
         $this->load->model('legacy/organization', 'legacy_organization');
+        $this->_counter_repository = new Counter_repository();
     }
 
     /**
      * @Private
      * Fungsi untuk mengecek organisasi code
      */
-    private function is_org_code_existed($org_code){
+    private function is_org_code_existed($org_code)
+    {
         $this->db->select('1');
         $this->db->from('hrms_organization');
         $this->db->where('org_code', $org_code);
@@ -32,26 +36,11 @@ class Organization_repository extends CI_Model
      */
     private function counter_assignment()
     {
-        $this->db->select('org_start_num,org_counter_id,job_start_num,job_counter_id');
-        $this->db->from('hrms_counter');
-        $query_counter = $this->db->get();
-        $row_counter = $query_counter->row();
-        if (count($row_counter) == 0) {
-            throw new Exception('Error @OrgRepo: Counter not set by admin!');
+        try {
+            $this->_counter_repository->org_counter_increment();
+        } catch (Exception $e) {
+            throw $e;
         }
-
-        $counter_job = $row_counter->job_counter_id;
-        $counter_org = $row_counter->org_counter_id;
-        $counter_job++;
-        $counter_org++;
-
-        $data_counter = array(
-            'org_counter_id'=>$counter_org,
-            'job_counter_id'=>$counter_job
-        );
-
-        $this->db->where('id', '1');
-        $this->db->update('hrms_counter', $data_counter);
     }
     
     /**
@@ -90,7 +79,7 @@ class Organization_repository extends CI_Model
                 'org_parent' => $entity->org_parent
             );
             
-            if($this->is_org_code_existed($entity->org_code) == true) {
+            if ($this->is_org_code_existed($entity->org_code) == true) {
                 throw new Exception("Error @OrgRepo: Organization code already existed!");
             }
 
