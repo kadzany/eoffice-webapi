@@ -31,6 +31,21 @@ class Organization_repository extends CI_Model
 
     /**
      * @Private
+     * Fungsi untuk mengecek organisasi 
+     */
+    private function is_org_existed($org_num)
+    {
+        $this->db->select('1');
+        $this->db->from('hrms_organization');
+        $this->db->where('org_num', $org_num);
+
+        $q = $this->db->get();
+        $row = $q->row();
+        return count($row) > 0;
+    }
+
+    /**
+     * @Private
      * Fungsi untuk meng-update counter
      */
     private function counter_assignment()
@@ -139,6 +154,28 @@ class Organization_repository extends CI_Model
 
             $this->db->trans_commit();
             return true;
+        } catch (Exception $e) {
+            throw $e;
+        }
+    }
+
+    /*
+    * Prosedur untuk menghapus entry organisasi di database
+    */
+    public function delete_organization($orgnum)
+    {
+        try {
+            if ($this->is_org_existed($orgnum) != true) {
+                throw new Exception("Error @OrgRepo: Organization does not exists or already deleted!");
+            }
+
+            $this->db->trans_begin();
+            
+            $this->db->where('org_num', $orgnum);
+            $q = $this->db->delete('hrms_organization');
+            
+            $this->db->trans_commit();
+            return $q;
         } catch (Exception $e) {
             throw $e;
         }
