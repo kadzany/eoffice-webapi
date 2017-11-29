@@ -11,28 +11,63 @@ class Counter_repository extends CI_Model
     }
 
     /**
-     * @Private
+     * @private
+     * Fungsi get max id nya counter
+     * CONS: Expensive SQL calls
+     */
+    public function get_max_counter_id()
+    {
+        $maxid = 0;
+        $row = $this->db->query('select max(id) as maxid from hrms_counter')->row();
+        if ($row) {
+            $maxid = $row->maxid;
+        }
+        return $maxid;
+    }
+
+    /**
+    * @private
+    * Fungsi get counter
+    * CONS: Expensive SQL calls
+    */
+    public function get_counter()
+    {
+        try {
+            $maxid = $this->get_max_counter_id();
+        
+            $this->db->select('org_start_num,org_counter_id,job_start_num,job_counter_id');
+            $this->db->from('hrms_counter');
+            $this->db->where('id', $maxid);
+            $query = $this->db->get();
+            $result = $query->row();
+        
+            if (count($result) == 0) {
+                throw new Exception('Error @OrgRepo: Counter not set by admin!');
+            }
+
+            return $result;
+        } catch (Exception $e) {
+            throw $e;
+        }
+    }
+
+    /**
+     * @Public
      * Fungsi untuk menambah organization counter
      */
     public function org_counter_increment()
     {
         try {
-            $this->db->select('org_start_num,org_counter_id,job_start_num,job_counter_id');
-            $this->db->from('hrms_counter');
-            $query_counter = $this->db->get();
-            $row_counter = $query_counter->row();
-            if (count($row_counter) == 0) {
-                throw new Exception('Error @OrgRepo: Counter not set by admin!');
-            }
-    
-            $counter_org = $row_counter->org_counter_id;
+            $counter = $this->get_counter();
+            $counter_org = $counter->org_counter_id;
             $counter_org++;
     
             $data_counter = array(
                 'org_counter_id'=>$counter_org
             );
     
-            $this->db->where('id', '1');
+            $maxid = $this->get_max_counter_id();
+            $this->db->where('id', $maxid);
             $this->db->update('hrms_counter', $data_counter);
         } catch (Exception $e) {
             throw $e;

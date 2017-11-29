@@ -1,6 +1,5 @@
 <?php
 require(APPPATH . 'models/repos/RepoConstants.php');
-require(APPPATH . 'models/repos/Counter_repository.php');
 /**
  * @OrgRepo
  * Repository pattern
@@ -12,7 +11,7 @@ class Organization_repository extends CI_Model
     {
         parent::__construct();
         $this->load->model('legacy/organization', 'legacy_organization');
-        $this->_counter_repository = new Counter_repository();
+        $this->load->model('repos/Counter_repository');
     }
 
     /**
@@ -37,7 +36,7 @@ class Organization_repository extends CI_Model
     private function counter_assignment()
     {
         try {
-            $this->_counter_repository->org_counter_increment();
+            $this->Counter_repository->org_counter_increment();
         } catch (Exception $e) {
             throw $e;
         }
