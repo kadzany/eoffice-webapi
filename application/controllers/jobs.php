@@ -21,7 +21,7 @@ class Organizations extends REST_Controller
     }
 
     /**
-     * Create organization
+     * Create pekerjaan
      */
     public function index_post()
     {

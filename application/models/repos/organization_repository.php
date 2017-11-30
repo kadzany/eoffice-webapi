@@ -6,7 +6,6 @@ require(APPPATH . 'models/repos/RepoConstants.php');
  */
 class Organization_repository extends CI_Model
 {
-    private $_counter_repository = null;
     public function __construct()
     {
         parent::__construct();
@@ -99,8 +98,6 @@ class Organization_repository extends CI_Model
 
             $this->db->trans_begin();
 
-            $this->counter_assignment();
-
             $q = $this->db->insert('hrms_organization', $data);
             $orgnum = $this->db->insert_id();
 
@@ -113,6 +110,7 @@ class Organization_repository extends CI_Model
                 return null;
             }
 
+            $this->counter_assignment();
             $this->db->trans_commit();
             return $orgnum;
         } catch (Exception $e) {
@@ -142,6 +140,10 @@ class Organization_repository extends CI_Model
                 'org_parent' => $entity->org_parent
             );
             
+            if ($this->is_org_code_existed($entity->org_code) != true) {
+                throw new Exception("Error @OrgRepo: Cannot Update: Organization code does not exists or already deleted!");
+            }
+
             $this->db->trans_begin();
 
             $this->db->where('org_num', $data['org_num']);
@@ -166,7 +168,7 @@ class Organization_repository extends CI_Model
     {
         try {
             if ($this->is_org_existed($orgnum) != true) {
-                throw new Exception("Error @OrgRepo: Organization does not exists or already deleted!");
+                throw new Exception("Error @OrgRepo: Cannot Delete: Organization does not exists or already deleted!");
             }
 
             $this->db->trans_begin();

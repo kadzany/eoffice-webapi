@@ -6,7 +6,6 @@ require(APPPATH . 'models/repos/RepoConstants.php');
  */
 class Job_repository extends CI_Model
 {
-    private $_counter_repository = null;
     public function __construct()
     {
         parent::__construct();
@@ -50,7 +49,7 @@ class Job_repository extends CI_Model
     private function counter_assignment()
     {
         try {
-            $this->Counter_repository->org_counter_increment();
+            $this->Counter_repository->job_counter_increment();
         } catch (Exception $e) {
             throw $e;
         }
@@ -97,8 +96,6 @@ class Job_repository extends CI_Model
 
             $this->db->trans_begin();
 
-            $this->counter_assignment();
-
             $q = $this->db->insert('hrms_job', $data);
             $jobnum = $this->db->insert_id();
 
@@ -110,7 +107,8 @@ class Job_repository extends CI_Model
                 $this->db->trans_rollback();
                 return null;
             }
-
+            
+            $this->counter_assignment();
             $this->db->trans_commit();
             return $jobnum;
         } catch (Exception $e) {
@@ -136,6 +134,10 @@ class Job_repository extends CI_Model
                 'job_code' => $entity->job_code,
                 'org_num' => $entity->organization
             );
+
+            if ($this->is_job_code_existed($entity->job_code) != true) {
+                throw new Exception("Error @JobRepo: Cannot Update: Job code does not exists or already deleted!");
+            }
             
             $this->db->trans_begin();
 
@@ -161,7 +163,7 @@ class Job_repository extends CI_Model
     {
         try {
             if ($this->is_job_existed($jobnum) != true) {
-                throw new Exception("Error @JobRepo: Job does not exists or already deleted!");
+                throw new Exception("Error @JobRepo: Cannot Delete: Job does not exists or already deleted!");
             }
 
             $this->db->trans_begin();
