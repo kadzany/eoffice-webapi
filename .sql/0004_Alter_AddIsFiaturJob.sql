@@ -1,1 +1,0 @@
-alter table eoffice2.hrms_job add `is_fiatur` TINYINT NULL
