@@ -11,6 +11,20 @@ class Organizations extends REST_Controller
     }
 
     /**
+     * Search organization by id
+     */
+    public function byid_get()
+    {
+        if(!$this->get('id')){
+            $this->response($result, parent::HTTP_NOT_FOUND);
+        }
+
+        $id = $this->get('id');
+        $result = $this->organization_repository->get_byid_org($id);
+        $this->response($result, parent::HTTP_OK);
+    }
+
+    /**
      * Search organizations
      */
     public function index_get()
