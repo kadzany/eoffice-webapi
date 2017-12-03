@@ -140,6 +140,10 @@ class Organization_repository extends CI_Model
             if (get_class($entity) != 'Organization_entity') {
                 throw new Exception("Error @OrgRepo: Invalid entity type!");
             }
+
+            if($entity->org_num == null){
+                throw new Exception("Error @OrgRepo: Primary key Id is not set!");
+            }
             
             $data = array(
                 'org_num'=>$entity->org_num,
