@@ -91,10 +91,10 @@ class Organizations extends REST_Controller
     /**
      * Delete organization
      */
-    public function index_delete()
+    public function delete_post()
     {
         try {
-            $orgnum = $this->delete('org_num');
+            $orgnum = $this->post('org_num');
             $result = $this->organization_repository->delete_organization($orgnum);
             $this->response($result, parent::HTTP_OK);
         } catch (Exception $e) {

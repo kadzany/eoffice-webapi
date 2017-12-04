@@ -32,11 +32,11 @@ class Organization_repository extends CI_Model
      * @Private
      * Fungsi untuk mengecek organisasi 
      */
-    private function is_org_existed($org_num)
+    private function is_org_existed($orgnum)
     {
         $this->db->select('1');
         $this->db->from('hrms_organization');
-        $this->db->where('org_num', $org_num);
+        $this->db->where('org_num', $orgnum);
 
         $q = $this->db->get();
         $row = $q->row();
