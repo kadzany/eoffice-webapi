@@ -13,13 +13,26 @@ class Employees extends REST_Controller
     {
         $result = '';
         $uname = $this->get('uname');
+        $filter = $this->get('filter');
+        $keyword = $this->get('keyword');
         if ($uname) {
             $result = $this->employee_repository->get_detail_emp($uname);
         } else {
-            $result = $this->employee_repository->get_all_emp();
+            $result = $this->employee_repository->get_all_emp($keyword, $filter);
         }
         $this->response($result, parent::HTTP_OK);
     }
+
+    /**
+    * Search pekerjaan berdasarkan id
+    */
+    public function byid_get()
+    {
+        $empnum = $this->get('id');
+        $result = $this->employee_repository->get_byid_emp($empnum);
+        $this->response($result, parent::HTTP_OK);
+    }
+
 
     /**
      * Create employee

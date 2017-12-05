@@ -86,6 +86,19 @@ class Job_repository extends CI_Model
     }
 
     /**
+     * Function untuk menampilkan pekerjaan by organisasi nya
+     */
+    public function get_byorgnum_job($orgnum)
+    {
+        $this->db->select('A.*, B.org_num');
+        $this->db->from('hrms_job A');
+        $this->db->join('hrms_job_org B', 'A.job_num = B.job_num');
+        $this->db->where('B.org_num', $orgnum);
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    /**
      * Function untuk menampilkan seluruh job, based on job number
      */
     public function get_all_job($jobnum)

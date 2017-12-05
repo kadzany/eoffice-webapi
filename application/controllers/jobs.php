@@ -31,6 +31,16 @@ class Jobs extends REST_Controller
     }
 
     /**
+     * Search pekerjaan berdasarkan nomor org
+     */
+    public function byorgnum_get()
+    {
+        $jobnum = $this->get('orgnum');
+        $result = $this->job_repository->get_byorgnum_job($jobnum);
+        $this->response($result, parent::HTTP_OK);
+    }
+
+    /**
      * Create pekerjaan
      */
     public function index_post()
@@ -85,7 +95,7 @@ class Jobs extends REST_Controller
         try {
             $jobnum = $this->post('job_num');
             $orgnum = $this->post('org_num');
-            
+
             $result = $this->job_repository->delete_job($jobnum, $orgnum);
             $this->response($result, parent::HTTP_OK);
         } catch (Exception $e) {

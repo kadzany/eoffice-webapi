@@ -70,18 +70,32 @@ class Employee_repository extends CI_Model
      */
     public function get_all_emp($keyword, $filter)
     {
-        $this->db->select('A.emp_id,A.emp_num,A.emp_firstname,A.emp_password,A.emp_username,A.emp_lastname,A.emp_dob,A.emp_email,A.emp_street,B.job_name,C.org_name');
+        $this->db->select('A.emp_id,A.emp_num,A.emp_firstname,A.emp_password,A.emp_username,A.emp_lastname,A.emp_dob,A.emp_email,A.emp_street,B.job_name, null as org_name');
         $this->db->from('hrms_employees as A');
         $this->db->where('A.emp_firstname not like', 'admin');
         // $this->db->where('A.emp_id <>', 9999);
         // $this->db->where('A.emp_id <>', 0000000);
         // $this->db->where('A.emp_id <>', 9998);
         $this->db->join('hrms_job as B', 'A.emp_job=B.job_num');
-        $this->db->join('hrms_organization as C', 'B.org_num=C.org_num');
+        // $this->db->join('hrms_organization as C', 'B.org_num=C.org_num');
 
         if ($keyword != null && $filter != null) {
             $this->db->like(strtolower($filter), strtolower($keyword));
         }
+
+        $this->db->order_by('A.emp_num', 'ASC');
+        $q = $this->db->get();
+
+        return $q->result();
+    }
+
+    public function get_byid_emp($empnum)
+    {
+        $this->db->select('A.emp_id,A.emp_num,A.emp_firstname,A.emp_password,A.emp_username,A.emp_lastname,A.emp_dob,A.emp_email,A.emp_street,B.job_name, null as org_name');
+        $this->db->from('hrms_employees as A');
+        $this->db->where('A.emp_num', $empnum);
+        $this->db->join('hrms_job as B', 'A.emp_job=B.job_num');
+        // $this->db->join('hrms_organization as C', 'B.org_num=C.org_num');
 
         $this->db->order_by('A.emp_num', 'ASC');
         $q = $this->db->get();
