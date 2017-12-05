@@ -24,6 +24,21 @@ class Job_Org_repository extends CI_Model
     }
 
     /*
+    * Prosedur untuk get berdasarkan org num dan job num
+    */
+    private function get_by_combi($orgnum, $jobnum)
+    {
+        $this->db->select('*');
+        $this->db->from('hrms_job_org');
+        $this->db->where('org_num', $orgnum);
+        $this->db->where('job_num', $jobnum);
+
+        $q = $this->db->get();
+        $row = $q->row();
+        return $row;
+    }
+
+    /*
     * Prosedur untuk menambah entry organisasi kedalam database
     */
     public function add_job_org($entity)
@@ -58,6 +73,32 @@ class Job_Org_repository extends CI_Model
 
             $this->db->trans_commit();
             return $jobOrgNum;
+        } catch (Exception $e) {
+            throw $e;
+        }
+    }
+
+    public function delete_job_org($orgnum, $jobnum)
+    {
+        try {
+            $org = $this->get_by_combi($orgnum, $jobnum);
+
+            if($org == null){
+                throw new Exception('Error @JobOrgRepo: Relationship already deleted!');
+            }
+            
+            $this->db->trans_begin();
+
+            $this->db->where('job_org_num', $org->job_org_num);
+            $qJobOrg = $this->db->delete('hrms_job_org');
+
+            if ($qJobOrg == false) {
+                $this->db->trans_rollback();
+                return false;
+            }
+
+            $this->db->trans_commit();
+            return true;
         } catch (Exception $e) {
             throw $e;
         }

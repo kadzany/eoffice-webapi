@@ -219,15 +219,22 @@ class Job_repository extends CI_Model
     /*
     * Prosedur untuk menghapus entry pekerjaan di database
     */
-    public function delete_job($jobnum)
+    public function delete_job($jobnum, $orgnum)
     {
         try {
+
             if ($this->is_job_existed($jobnum) != true) {
                 throw new Exception("Error @JobRepo: Cannot Delete: Job does not exists or already deleted!");
             }
 
             $this->db->trans_begin();
             
+            $jobOrg = $this->Job_Org_repository->delete_job_org($orgnum, $jobnum);
+            if($jobOrg == false){
+                $this->db->trans_rollback();
+                return false;
+            }
+
             $this->db->where('job_num', $jobnum);
             $q = $this->db->delete('hrms_job');
             

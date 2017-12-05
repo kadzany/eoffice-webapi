@@ -80,11 +80,13 @@ class Jobs extends REST_Controller
     /**
      * Delete pekerjaan
      */
-    public function index_delete()
+    public function delete_post()
     {
         try {
-            $orgnum = $this->delete('job_num');
-            $result = $this->job_repository->delete_job($orgnum);
+            $jobnum = $this->post('job_num');
+            $orgnum = $this->post('org_num');
+            
+            $result = $this->job_repository->delete_job($jobnum, $orgnum);
             $this->response($result, parent::HTTP_OK);
         } catch (Exception $e) {
             $this->response($e->getMessage(), parent::HTTP_INTERNAL_SERVER_ERROR);
