@@ -1,5 +1,5 @@
 <?php
-require(APPPATH . 'models/repos/RepoConstants.php');
+require_once(APPPATH . 'models/repos/RepoConstants.php');
 /**
  * @OrgRepo
  * Repository pattern

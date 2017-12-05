@@ -1,5 +1,5 @@
 <?php
-require(APPPATH . 'models/entities/DBEntity.php');
+require_once(APPPATH . 'models/entities/DBEntity.php');
 
 /**
  * Class untuk entitas organisasi

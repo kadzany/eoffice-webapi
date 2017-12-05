@@ -1,8 +1,8 @@
 <?php
-require(APPPATH . 'libraries/REST_Controller.php');
-require(APPPATH . 'models/entities/Jobs_entity.php');
+require_once(APPPATH . 'libraries/REST_Controller.php');
+require_once(APPPATH . 'models/entities/Job_entity.php');
 
-class Organizations extends REST_Controller
+class Jobs extends REST_Controller
 {
     public function __construct()
     {
@@ -16,7 +16,7 @@ class Organizations extends REST_Controller
     public function index_get()
     {
         $filter = $this->get('filter');
-        $result = $this->job_repository->get_all_org($filter);
+        $result = $this->job_repository->get_all_job($filter);
         $this->response($result, parent::HTTP_OK);
     }
 
@@ -32,7 +32,7 @@ class Organizations extends REST_Controller
                     'job_name' => $this->post('job_name'),
                     'job_description' => $this->post('job_description'),
                     'job_code' => $this->post('job_code'),
-                    'org_num' => $this->post('organization')
+                    'org_num' => $this->post('org_num')
                 )
             );
             

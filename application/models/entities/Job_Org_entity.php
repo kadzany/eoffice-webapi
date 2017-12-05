@@ -2,9 +2,9 @@
 require_once(APPPATH . 'models/entities/DBEntity.php');
 
 /**
- * Class untuk entitas organisasi
+ * Class untuk entitas relasi antara job dan organisasi
  */
-class Employee_entity extends DBEntity
+class Job_Org_entity extends DBEntity
 {
     public function __construct($parameters = array())
     {

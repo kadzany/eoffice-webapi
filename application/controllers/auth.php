@@ -1,5 +1,5 @@
 <?php
-require(APPPATH . 'libraries/REST_Controller.php');
+require_once(APPPATH . 'libraries/REST_Controller.php');
 
 class Auth extends REST_Controller
 {

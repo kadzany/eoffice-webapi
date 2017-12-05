@@ -1,6 +1,6 @@
 <?php
-require(APPPATH . 'libraries/REST_Controller.php');
-require(APPPATH . 'models/entities/Organization_entity.php');
+require_once(APPPATH . 'libraries/REST_Controller.php');
+require_once(APPPATH . 'models/entities/Organization_entity.php');
 
 class Organizations extends REST_Controller
 {

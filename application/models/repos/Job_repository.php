@@ -1,5 +1,6 @@
 <?php
-require(APPPATH . 'models/repos/RepoConstants.php');
+require_once(APPPATH . 'models/repos/RepoConstants.php');
+require_once(APPPATH . 'models/entities/Job_Org_entity.php');
 /**
  * @JobRepo
  * Repository pattern
@@ -10,6 +11,7 @@ class Job_repository extends CI_Model
     {
         parent::__construct();
         $this->load->model('repos/Counter_repository');
+        $this->load->model('repos/Job_Org_repository');
     }
 
     /**
@@ -29,7 +31,7 @@ class Job_repository extends CI_Model
 
     /**
      * @Private
-     * Fungsi untuk mengecek job 
+     * Fungsi untuk mengecek job
      */
     private function is_job_existed($job_num)
     {
@@ -58,15 +60,15 @@ class Job_repository extends CI_Model
     /**
      * Function untuk menampilkan seluruh job, based on job number
      */
-    public function get_all_job($orgnum)
+    public function get_all_job($jobnum)
     {
         $this->db->select('A.job_num,A.job_id,A.job_name,A.job_description,B.org_name');
         $this->db->from('hrms_job as A');
         $this->db->join('hrms_organization as B', 'B.org_num=A.org_num');
         // $this->db->where('A.job_num !=', '30');
         // $this->db->where('A.job_num !=','45');
-        if ($orgnum!=null && $orgnum!='0') {
-            $this->db->where('A.org_num', $orgnum);
+        if ($jobnum!=null && $jobnum!='0') {
+            $this->db->where('A.job_num', $jobnum);
         }
         $query = $this->db->get();
         return $query->result();
@@ -87,11 +89,15 @@ class Job_repository extends CI_Model
                 'job_name' => $entity->job_name,
                 'job_description' => $entity->job_description,
                 'job_code' => $entity->job_code,
-                'org_num' => $entity->organization
+                // 'org_num' => 
             );
             
             if ($this->is_job_code_existed($entity->job_code) == true) {
                 throw new Exception("Error @JobRepo: Job code already existed!");
+            }
+
+            if ($entity->org_num == null || $entity->org_num == '' || $entity->org_num == '0') {
+                throw new Exception("Error @JobRepo: Organization number cannot be zero, empty or null!");
             }
 
             $this->db->trans_begin();
@@ -103,7 +109,17 @@ class Job_repository extends CI_Model
                 throw new Exception('Error @JobRepo: No rows affected!');
             }
             
-            if ($this->db->trans_status() == false) {
+            // add the relationship to the organization num
+            $jobOrgEntity = new Job_Org_entity(
+                array(
+                    'job_num' => $jobnum,
+                    'org_num' => $entity->org_num
+                )
+            );
+
+            $org = $this->Job_Org_repository->add_job_org($jobOrgEntity);
+            
+            if ($this->db->trans_status() == false || $org == null) {
                 $this->db->trans_rollback();
                 return null;
             }
