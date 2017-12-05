@@ -57,13 +57,13 @@ class Organization_repository extends CI_Model
     }
     
     /**
-     * Function untuk menampilkan organization by org_num
+     * Function untuk menampilkan organization by number
      */
-    public function get_byid_org($org_num)
+    public function get_byid_org($orgnum)
     {
         $this->db->select('*');
         $this->db->from('hrms_organization');
-        $this->db->where('org_num', $org_num);
+        $this->db->where('org_num', $orgnum);
         $query = $this->db->get();
         return $query->result();
     }

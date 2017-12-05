@@ -58,13 +58,26 @@ class Job_repository extends CI_Model
     }
     
     /**
+     * Function untuk menampilkan organization by number
+     */
+    public function get_byid_job($jobnum)
+    {
+        $this->db->select('A.*, B.org_num');
+        $this->db->from('hrms_job A');
+        $this->db->join('hrms_job_org B', 'A.job_num = B.job_num');
+        $this->db->where('A.job_num', $jobnum);
+        $query = $this->db->get();
+        return $query->result();
+    }
+
+    /**
      * Function untuk menampilkan seluruh job, based on job number
      */
     public function get_all_job($jobnum)
     {
-        $this->db->select('A.job_num,A.job_id,A.job_name,A.job_description,B.org_name');
+        $this->db->select('A.job_num,A.job_id,A.job_name,A.job_description');
         $this->db->from('hrms_job as A');
-        $this->db->join('hrms_organization as B', 'B.org_num=A.org_num');
+        // $this->db->join('hrms_organization as B', 'B.org_num=A.org_num');
         // $this->db->where('A.job_num !=', '30');
         // $this->db->where('A.job_num !=','45');
         if ($jobnum!=null && $jobnum!='0') {
@@ -89,7 +102,7 @@ class Job_repository extends CI_Model
                 'job_name' => $entity->job_name,
                 'job_description' => $entity->job_description,
                 'job_code' => $entity->job_code,
-                // 'org_num' => 
+                // 'org_num' =>
             );
             
             if ($this->is_job_code_existed($entity->job_code) == true) {
@@ -148,7 +161,7 @@ class Job_repository extends CI_Model
                 'job_name' => $entity->job_name,
                 'job_description' => $entity->job_description,
                 'job_code' => $entity->job_code,
-                'org_num' => $entity->organization
+                // 'org_num' => $entity->org_num
             );
 
             if ($this->is_job_code_existed($entity->job_code) != true) {
@@ -159,6 +172,18 @@ class Job_repository extends CI_Model
 
             $this->db->where('job_num', $data['job_num']);
             $this->db->update('hrms_job', $data);
+
+            // add the relationship to the organization num
+            /*
+            $jobOrgEntity = new Job_Org_entity(
+                array(
+                    'job_num' => $entity->job_num,
+                    'org_num' => $entity->org_num
+                )
+            );
+
+            $org = $this->Job_Org_repository->upd_job_org($jobOrgEntity);
+            */
 
             if ($this->db->trans_status() == false) {
                 $this->db->trans_rollback();

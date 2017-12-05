@@ -20,6 +20,16 @@ class Jobs extends REST_Controller
         $this->response($result, parent::HTTP_OK);
     }
 
+     /**
+     * Search pekerjaan berdasarkan id
+     */
+    public function byid_get()
+    {
+        $jobnum = $this->get('id');
+        $result = $this->job_repository->get_byid_job($jobnum);
+        $this->response($result, parent::HTTP_OK);
+    }
+
     /**
      * Create pekerjaan
      */
@@ -51,12 +61,12 @@ class Jobs extends REST_Controller
         try {
             $entity = new Job_entity(
                 array(
-                    'job_num' => $this->post('job_num'),
-                    'job_id' => $this->post('job_id'),
-                    'job_name' => $this->post('job_name'),
-                    'job_description' => $this->post('job_description'),
-                    'job_code' => $this->post('job_code'),
-                    'org_num' => $this->post('organization')
+                    'job_num' => $this->put('job_num'),
+                    'job_id' => $this->put('job_id'),
+                    'job_name' => $this->put('job_name'),
+                    'job_description' => $this->put('job_description'),
+                    'job_code' => $this->put('job_code'),
+                    'org_num' => $this->put('organization')
                 )
             );
             
