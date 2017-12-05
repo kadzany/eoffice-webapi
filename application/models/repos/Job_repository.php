@@ -31,6 +31,21 @@ class Job_repository extends CI_Model
 
     /**
      * @Private
+     * Fungsi untuk mengecek job id
+     */
+    private function is_job_id_existed($job_id)
+    {
+        $this->db->select('1');
+        $this->db->from('hrms_job');
+        $this->db->where('job_id', $job_id);
+
+        $q = $this->db->get();
+        $row = $q->row();
+        return count($row) > 0;
+    }
+
+    /**
+     * @Private
      * Fungsi untuk mengecek job
      */
     private function is_job_existed($job_num)
@@ -107,6 +122,10 @@ class Job_repository extends CI_Model
             
             if ($this->is_job_code_existed($entity->job_code) == true) {
                 throw new Exception("Error @JobRepo: Job code already existed!");
+            }
+
+            if ($this->is_job_id_existed($entity->job_id) == true) {
+                throw new Exception("Error @JobRepo: Job id already existed!");
             }
 
             if ($entity->org_num == null || $entity->org_num == '' || $entity->org_num == '0') {
