@@ -82,7 +82,7 @@ class Employees extends REST_Controller
                     'emp_id' => $this->put('emp_id'),
                     'emp_firstname' => $this->put('emp_firstname'),
                     'emp_lastname' => $this->put('emp_lastname'),
-                    'emp_gender' => $this->put('gender'),
+                    'emp_gender' => $this->put('emp_gender'),
                     'emp_dob' => $this->put('emp_dob'),
                     'emp_street' => $this->put('emp_street'),
                     'emp_email' => $this->put('emp_email'),
@@ -94,8 +94,8 @@ class Employees extends REST_Controller
                     'emp_job' => $this->put('emp_job'),
                     'job_code' => $this->put('job_code'),
                     'org_code' => $this->put('org_code'),
-                    'email_username' => $this->put('email_username'),
-                    'email_password' => $this->put('email_password')
+                    'emp_username' => $this->put('emp_username'),
+                    'emp_password' => $this->put('emp_password')
                 )
             );
             
@@ -109,10 +109,10 @@ class Employees extends REST_Controller
     /**
      * Delete pekerjaan
      */
-    public function index_delete()
+    public function delete_post()
     {
         try {
-            $empnum = $this->delete('emp_num');
+            $empnum = $this->post('emp_num');
             $result = $this->employee_repository->delete_employee($empnum);
             $this->response($result, parent::HTTP_OK);
         } catch (Exception $e) {

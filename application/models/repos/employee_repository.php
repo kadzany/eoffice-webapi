@@ -177,18 +177,18 @@ class Employee_repository extends CI_Model
                 "emp_id" => $entity->emp_id,
                 "emp_firstname" => $entity->emp_firstname,
                 "emp_lastname" => $entity->emp_lastname,
-                "emp_gender" => $entity->gender,
+                "emp_gender" => $entity->emp_gender,
                 "emp_dob" => $entity->emp_dob,
                 "emp_street" => $entity->emp_street,
                 "emp_email" => $entity->emp_email,
                 "emp_cutah" => "10",
                 "emp_trip" => "10",
                 "emp_cubes" => "10",
-                "org_code" => $entity->org_code,
-                "org_id" => $entity->emp_org,
+                // "org_code" => $entity->org_code,
+                // "org_id" => $entity->emp_org,
                 "emp_job" => $entity->emp_job,
-                "job_code" => $entity->job_code,
-                "org_code" => $entity->org_code,
+                // "job_code" => $entity->job_code,
+                // "org_code" => $entity->org_code,
                 "emp_username" => $entity->emp_username,
                 "emp_password" => md5($entity->emp_password)
             );
@@ -200,7 +200,7 @@ class Employee_repository extends CI_Model
             $this->db->trans_begin();
             
             $this->db->where('emp_num', $data['emp_num']);
-            $this->db->update('hrms_employees', $data);
+            $q = $this->db->update('hrms_employees', $data);
 
             if ($q == 0) {
                 throw new Exception('Error @EmpRepo: No rows affected!');
@@ -231,7 +231,7 @@ class Employee_repository extends CI_Model
             $this->db->trans_begin();
             
             $this->db->where('emp_num', $empnum);
-            $q = $this->db->delete('hrms_employee');
+            $q = $this->db->delete('hrms_employees');
             
             if ($q == false) {
                 $this->db->trans_rollback();
