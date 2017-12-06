@@ -191,12 +191,11 @@ class Organization_repository extends CI_Model
             $this->db->trans_begin();
             
             $this->db->where('org_num', $orgnum);
-            $q = $this->db->delete('hrms_organization');
-            
-            if ($q == false) {
+            if(!$this->db->delete('hrms_organization')){
                 $this->db->trans_rollback();
-                return null;
+                throw new Exception(json_encode($this->db->error()));
             }
+           
             $this->db->trans_commit();
             return true;
         } catch (Exception $e) {
