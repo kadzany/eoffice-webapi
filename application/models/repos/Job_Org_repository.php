@@ -38,6 +38,20 @@ class Job_Org_repository extends CI_Model
         return $row;
     }
 
+    /**
+     * Check job ada apa tidak di database
+     */
+    public function is_org_existed($orgnum)
+    {
+        $this->db->select('*');
+        $this->db->from('hrms_job_org');
+        $this->db->where('org_num', $orgnum);
+
+        $q = $this->db->get();
+        $row = $q->row();
+        return count($row) > 0;
+    }
+
     /*
     * Prosedur untuk menambah entry organisasi kedalam database
     */

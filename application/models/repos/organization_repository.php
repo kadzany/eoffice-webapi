@@ -11,6 +11,7 @@ class Organization_repository extends CI_Model
         parent::__construct();
         $this->load->model('legacy/organization', 'legacy_organization');
         $this->load->model('repos/Counter_repository');
+        $this->load->model('repos/Job_Org_repository');
     }
 
     /**
@@ -186,6 +187,10 @@ class Organization_repository extends CI_Model
         try {
             if ($this->is_org_existed($orgnum) != true) {
                 throw new Exception("Error @OrgRepo: Cannot Delete: Organization does not exists or already deleted!");
+            }
+
+            if ($this->Job_Org_repository->is_org_existed($orgnum)){
+                throw new Exception("Error @OrgRepo: Cannot Delete: Organization already referenced by jobs!");
             }
 
             $this->db->trans_begin();
