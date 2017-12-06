@@ -9,7 +9,3 @@ FAQ
 ===
 Q: What is Mwb?
 A: Model document for Mysql Workbench application.
-
-TODO:
-===
-1. See again the job assignment data structure and UI

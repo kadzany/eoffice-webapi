@@ -70,13 +70,14 @@ class Employee_repository extends CI_Model
      */
     public function get_all_emp($keyword, $filter)
     {
-        $this->db->select('A.emp_id,A.emp_num,A.emp_firstname,A.emp_password,A.emp_username,A.emp_lastname,A.emp_dob,A.emp_email,A.emp_street,B.job_name, null as org_name');
+        //$this->db->select('A.emp_id,A.emp_num,A.emp_firstname,A.emp_password,A.emp_username,A.emp_lastname,A.emp_dob,A.emp_email,A.emp_street,B.job_name, \'\' as org_name, A.emp_gender');
+        $this->db->select('A.*,B.job_name, \'\' as org_name');
         $this->db->from('hrms_employees as A');
         $this->db->where('A.emp_firstname not like', 'admin');
         // $this->db->where('A.emp_id <>', 9999);
         // $this->db->where('A.emp_id <>', 0000000);
         // $this->db->where('A.emp_id <>', 9998);
-        $this->db->join('hrms_job as B', 'A.emp_job=B.job_num');
+        $this->db->join('hrms_job as B', 'A.emp_job=B.job_num', 'left');
         // $this->db->join('hrms_organization as C', 'B.org_num=C.org_num');
 
         if ($keyword != null && $filter != null) {
@@ -91,10 +92,11 @@ class Employee_repository extends CI_Model
 
     public function get_byid_emp($empnum)
     {
-        $this->db->select('A.emp_id,A.emp_num,A.emp_firstname,A.emp_password,A.emp_username,A.emp_lastname,A.emp_dob,A.emp_email,A.emp_street,B.job_name, null as org_name');
+        //$this->db->select('A.emp_id,A.emp_num,A.emp_firstname,A.emp_password,A.emp_username,A.emp_lastname,A.emp_dob,A.emp_email,A.emp_street,B.job_name, \'\' as org_name, A.emp_gender');
+        $this->db->select('A.*,B.job_name, \'\' as org_name');
         $this->db->from('hrms_employees as A');
         $this->db->where('A.emp_num', $empnum);
-        $this->db->join('hrms_job as B', 'A.emp_job=B.job_num');
+        $this->db->join('hrms_job as B', 'A.emp_job=B.job_num', 'left');
         // $this->db->join('hrms_organization as C', 'B.org_num=C.org_num');
 
         $this->db->order_by('A.emp_num', 'ASC');
@@ -117,18 +119,18 @@ class Employee_repository extends CI_Model
                 "emp_id" => $entity->emp_id,
                 "emp_firstname" => $entity->emp_firstname,
                 "emp_lastname" => $entity->emp_lastname,
-                "emp_gender" => $entity->gender,
+                "emp_gender" => $entity->emp_gender,
                 "emp_dob" => $entity->emp_dob,
                 "emp_street" => $entity->emp_street,
                 "emp_email" => $entity->emp_email,
                 "emp_cutah" => $entity->emp_cutah,
                 "emp_trip" => $entity->emp_trip,
                 "emp_cubes" => $entity->emp_cubes,
-                "org_code" => $entity->org_code,
-                "org_id" => $entity->emp_org,
+                // "org_code" => $entity->org_code,
+                // "org_id" => $entity->emp_org,
                 "emp_job" => $entity->emp_job,
                 "job_code" => $entity->job_code,
-                "org_code" => $entity->org_code,
+                // "org_code" => $entity->org_code,
                 "emp_username" => $entity->emp_username,
                 "emp_password" => md5($entity->emp_password)
             );

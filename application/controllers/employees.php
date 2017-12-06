@@ -1,5 +1,6 @@
 <?php
 require_once(APPPATH . 'libraries/REST_Controller.php');
+require_once(APPPATH . 'models/entities/Employee_entity.php');
 
 class Employees extends REST_Controller
 {
@@ -45,20 +46,20 @@ class Employees extends REST_Controller
                     'emp_id' => $this->post('emp_id'),
                     'emp_firstname' => $this->post('emp_firstname'),
                     'emp_lastname' => $this->post('emp_lastname'),
-                    'emp_gender' => $this->post('gender'),
+                    'emp_gender' => $this->post('emp_gender'),
                     'emp_dob' => $this->post('emp_dob'),
                     'emp_street' => $this->post('emp_street'),
                     'emp_email' => $this->post('emp_email'),
                     'emp_cutah' => $this->post('emp_cutah'),
                     'emp_trip' =>$this->post('emp_trip'),
                     'emp_cubes' => $this->post('emp_email'),
-                    'org_code' => $this->post('emp_cubes'),
-                    'org_id' => $this->post('emp_org'),
+                    // 'org_code' => $this->post('emp_cubes'),
+                    // 'org_id' => $this->post('emp_org'),
                     'emp_job' => $this->post('emp_job'),
                     'job_code' => $this->post('job_code'),
-                    'org_code' => $this->post('org_code'),
-                    'email_username' => $this->post('email_username'),
-                    'email_password' => $this->post('email_password')
+                    // 'org_code' => $this->post('org_code'),
+                    'emp_username' => $this->post('emp_username'),
+                    'emp_password' => $this->post('emp_password')
                 )
             );
             
